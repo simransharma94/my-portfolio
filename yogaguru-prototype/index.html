@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YogaGuru — Online Yoga App Prototype (PRD v1.0)</title>
+  <style>
+    :root {
+      --bg-page: #eef2ef;
+      --bg-app: #f7f9f7;
+      --surface: #ffffff;
+      --primary: #2d6a4f;
+      --primary-dark: #1b4332;
+      --primary-light: #e6f2ec;
+      --accent: #d97706;
+      --accent-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 14px;
+      --shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 24px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 800px;
+      background: var(--bg-app);
+      border-radius: 38px;
+      border: 10px solid #1f2937;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .status-bar {
+      background: var(--surface);
+      padding: 10px 20px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-header {
+      background: var(--surface);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--primary-dark);
+    }
+
+    .brand-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      color: var(--text-main);
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .screen-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px 24px;
+    }
+
+    .bottom-nav {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 4px 12px;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 10px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 700;
+      background: var(--primary-light);
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .muted { color: var(--text-muted); font-size: 12px; line-height: 1.4; }
+    .small { font-size: 12px; }
+
+    .btn {
+      width: 100%;
+      padding: 11px 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid #fecaca; }
+    .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; border-radius: 8px; white-space: nowrap; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      white-space: nowrap;
+    }
+
+    .pill-amber { background: var(--accent-light); color: #92400e; }
+    .pill-red { background: var(--danger-light); color: var(--danger); }
+    .pill-gray { background: #f3f4f6; color: #374151; }
+
+    .alert {
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .alert-amber { background: var(--accent-light); border: 1px solid #fde68a; color: #92400e; }
+    .alert-green { background: var(--primary-light); border: 1px solid #a7f3d0; color: var(--primary-dark); }
+    .alert-red { background: var(--danger-light); border: 1px solid #fecaca; color: #991b1b; }
+
+    .input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .row { display: flex; gap: 8px; align-items: center; }
+    .between { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .wrap { flex-wrap: wrap; }
+
+    .chip-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
+    .chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 12px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .progress-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .progress-fill { height: 100%; background: var(--primary); transition: width 0.3s; }
+
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: #cbd5e1; border-radius: 22px; transition: 0.2s;
+    }
+    .slider:before {
+      content: ""; position: absolute; height: 16px; width: 16px;
+      left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s;
+    }
+    input:checked + .slider { background: var(--primary); }
+    input:checked + .slider:before { transform: translateX(18px); }
+
+    .ivr-screen {
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .ivr-log {
+      max-height: 175px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 10px 0;
+      padding-right: 4px;
+    }
+    .ivr-msg { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; }
+    .ivr-bot { background: #1f2937; border-left: 3px solid #34d399; }
+    .ivr-user { background: #065f46; text-align: right; }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .key-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .key-btn span { font-size: 9px; font-weight: 500; color: var(--text-muted); }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-sheet {
+      background: var(--surface);
+      width: 100%;
+      max-height: 85%;
+      border-radius: 20px 20px 0 0;
+      padding: 18px 16px 24px;
+      overflow-y: auto;
+    }
+
+    .toast {
+      position: absolute;
+      bottom: 74px;
+      left: 16px;
+      right: 16px;
+      background: #1f2937;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      z-index: 60;
+      display: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .stakeholder-panel {
+      width: 380px;
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .stakeholder-panel h2 { font-size: 16px; color: var(--primary-dark); margin-bottom: 6px; }
+    .stakeholder-panel h3 { font-size: 13px; margin: 14px 0 6px; color: var(--text-main); }
+    .prd-tag {
+      font-size: 11px;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .demo-btn {
+      width: 100%;
+      text-align: left;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-app);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 6px;
+    }
+    .demo-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+
+    @media (max-width: 840px) {
+      body { flex-direction: column; align-items: center; padding: 10px; }
+      .stakeholder-panel { width: 390px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-frame" id="phoneFrame">
+    <div class="status-bar">
+      <span>9:41 AM</span>
+      <span id="statusPersona">New User</span>
+      <span>5G • 92%</span>
+    </div>
+
+    <div class="app-header">
+      <div class="brand">
+        <div class="brand-dot">ॐ</div>
+        <span id="appTitle">YogaGuru</span>
+      </div>
+      <div class="header-actions" id="headerActions" style="display:none;">
+        <button class="icon-btn" onclick="openLanguageModal()" id="langBadge">EN</button>
+        <button class="icon-btn" onclick="openNotificationsModal()">
+          🔔 <span class="badge-dot" id="notifCount">1</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="screen-body" id="screenBody">
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Loading Prototype...</div>
+        <p class="muted">If this message stays visible, JavaScript is blocked in your browser.</p>
+      </div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav" style="display:none;">
+      <button class="nav-item active" data-tab="home" onclick="switchTab('home')">🏠<span id="navHome">Home</span></button>
+      <button class="nav-item" data-tab="sessions" onclick="switchTab('sessions')">🧘<span id="navSessions">Sessions</span></button>
+      <button class="nav-item" data-tab="eguru" onclick="switchTab('eguru')">📞<span id="navEguru">e-Guru</span></button>
+      <button class="nav-item" data-tab="plans" onclick="switchTab('plans')">💳<span id="navPlans">Plans</span></button>
+      <button class="nav-item" data-tab="profile" onclick="switchTab('profile')">🔒<span id="navProfile">Profile</span></button>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal-sheet" id="modalSheet"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <aside class="stakeholder-panel">
+    <h2>YogaGuru — PRD v1.0 Prototype</h2>
+    <p class="muted">Starts as a true <b>New User (0/10 sessions)</b>. Use the quick buttons below to jump to returning-user states.</p>
+
+    <h3>Quick Test Scenarios</h3>
+    <button class="demo-btn" onclick="resetPrototype()">🆕 Start Fresh as New User (0/10 • FR01)</button>
+    <button class="demo-btn" onclick="jumpAsReturningUser()">⚡ Skip Onboarding → Returning User (6/10)</button>
+    <button class="demo-btn" onclick="openInstructorPrivacyPreview()">👁️ Verify BR01: Preview What Instructor Sees</button>
+    <button class="demo-btn" onclick="simulateRenewalAlert()">🔔 Trigger US06/BR04: 3-Day Renewal Reminder</button>
+    <button class="demo-btn" onclick="simulateRefundEligible()">💰 Simulate BR03: 80% Completion (Refund Eligible)</button>
+    <button class="demo-btn" onclick="switchTab('eguru')">📞 Test FR08: Yoga e-Guru IVR & Medical Guardrail</button>
+
+    <h3>PRD Coverage Map</h3>
+    <div class="small" style="line-height: 1.7; color: #374151;">
+      <div><span class="prd-tag">FR01 / FR14</span> Phone/Email OTP + Regional Languages</div>
+      <div><span class="prd-tag">FR02 / BR01</span> Private Health Assessment + Granular Consent</div>
+      <div><span class="prd-tag">FR03 / FR04</span> 5–15m Desk Yoga, Personalized Plans, Streaks</div>
+      <div><span class="prd-tag">FR05 / BR02</span> Plan Comparison & One-Tap Cancellation</div>
+      <div><span class="prd-tag">FR06</span> UPI Checkout, Error/Retry & Invoices</div>
+      <div><span class="prd-tag">FR07 / FR09</span> Slot Validation, No Overbooking & Live 1:1</div>
+      <div><span class="prd-tag">FR08 / US07</span> Yoga e-Guru IVR + Human Escalation</div>
+      <div><span class="prd-tag">FR10 / US04</span> Eligible Session Recordings & Expiry</div>
+      <div><span class="prd-tag">FR11 / BR03</span> 80% Guarantee Tracker & Refund Request</div>
+    </div>
+
+    <h3>Open Questions Modeled Here (Sec 15)</h3>
+    <p class="muted">
+      • 80% completion applies to <b>refund eligibility only</b>; cancellation is 1-tap anytime.<br>
+      • Access continues until the <b>current billing period ends</b>.<br>
+      • Live 1:1 sessions included in Premium OR purchasable individually.
+    </p>
+  </aside>
+
+<script>
+var I18N = {
+  en: { welcome: "Welcome", deskYoga: "5–15 Min Desk Yoga", recommended: "Your Personalized Plan", navHome: "Home", navSessions: "Sessions", navEguru: "e-Guru", navPlans: "Plans", navProfile: "Profile" },
+  hi: { welcome: "स्वागत है", deskYoga: "5–15 मिनट डेस्क योग", recommended: "आपकी व्यक्तिगत योजना", navHome: "होम", navSessions: "सत्र", navEguru: "ई-गुरु", navPlans: "प्लान", navProfile: "प्रोफ़ाइल" },
+  ta: { welcome: "வருக", deskYoga: "5–15 நிமிட மேசை யோகா", recommended: "உங்கள் தனிப்பட்ட திட்டம்", navHome: "முகப்பு", navSessions: "வகுப்புகள்", navEguru: "இ-குரு", navPlans: "திட்டங்கள்", navProfile: "சுயவிவரம்" }
+};
+
+var PLANS = [
+  { id: "basic", name: "Basic Self-Practice", price: 499, desc: "5–15 min Desk Yoga + Daily Plan" },
+  { id: "pro", name: "Pro Wellness Monthly", price: 999, desc: "All Group Sessions + Recordings + Guarantee" },
+  { id: "premium", name: "Premium 1:1 Care", price: 2499, desc: "Includes Live 1:1 Instructor Sessions + Priority Support" }
+];
+
+/* Brand-new user state (0/10 sessions, 0-day streak, no plan, no bookings) */
+function createNewUserState() {
+  return {
+    loggedIn: false,
+    authStep: "login",
+    currentTab: "home",
+    language: "en",
+    user: {
+      name: "Aarav Sharma",
+      contact: "+91 98765 43210",
+      persona: "Office Professional",
+      goals: ["Stress Relief", "Flexibility"],
+      preferredTime: "1:00 PM (Office Break)",
+      streakDays: 0,
+      weeklyCheckIns: 0,
+      requiredWeeklyCheckIns: 4,
+      prescribedSessions: 10,
+      completedSessions: 0,
+      remindersEnabled: true
+    },
+    healthAssessment: [
+      { id: "h1", label: "Lower Back Stiffness (Desk Posture)", severity: "Mild", shareWithInstructor: true },
+      { id: "h2", label: "Work-Related Anxiety / Sleep Issues", severity: "Moderate", shareWithInstructor: false },
+      { id: "h3", label: "Mild Knee Strain", severity: "Occasional", shareWithInstructor: false }
+    ],
+    subscription: {
+      planId: "none",
+      planName: "No Active Plan",
+      price: 0,
+      status: "None",
+      autoRenew: false,
+      endDate: "—",
+      renewalReminder3Day: false,
+      refundStatus: "Not Eligible Yet",
+      refundClaimedEver: false
+    },
+    sessionFilter: { category: "All", duration: "All", language: "All" },
+    bookedSessionIds: [],
+    sessions: [
+      { id: "s1", title: "Neck & Shoulder Desk Reset", duration: 10, category: "Desk Yoga", language: "English", instructor: "Meera Nair", time: "Today, 1:15 PM", type: "Group", spotsLeft: 12, price: 149, steps: ["Seated Neck Rolls (2m)", "Eagle Arms Stretch (3m)", "Chair Spinal Twist (3m)", "Box Breathing (2m)"] },
+      { id: "s2", title: "15-Min Midday Stress Release", duration: 15, category: "Stress Relief", language: "Hindi", instructor: "Rohan Verma", time: "Today, 4:30 PM", type: "Group", spotsLeft: 5, price: 149, steps: ["Shoulder Shrugs (3m)", "Seated Forward Fold (4m)", "Nadi Shodhana (5m)", "Relaxation (3m)"] },
+      { id: "s3", title: "Core & Weight Management Flow", duration: 30, category: "Weight Management", language: "English", instructor: "Ananya Iyer", time: "Tomorrow, 7:00 AM", type: "Group", spotsLeft: 0, price: 249, steps: ["Sun Salutations (10m)", "Boat & Plank (12m)", "Cooldown Stretch (8m)"] },
+      { id: "s4", title: "Evening Spine Decompression", duration: 12, category: "Desk Yoga", language: "Tamil", instructor: "Karthik S.", time: "Today, 6:30 PM", type: "Group", spotsLeft: 8, price: 149, steps: ["Cat-Cow Seated (4m)", "Wrist Release (4m)", "Belly Breathing (4m)"] },
+      { id: "s5", title: "Live 1:1 Posture & Pain Assessment", duration: 30, category: "Live 1:1", language: "English", instructor: "Dr. Kavita Rao (Cert. Therapist)", time: "Tomorrow, 5:00 PM", type: "1:1", spotsLeft: 1, price: 799, steps: ["Assessment Review (10m)", "Custom Sequence (15m)", "Q&A (5m)"] }
+    ],
+    recordings: [
+      { id: "r1", title: "Desk Posture Basics (Sample Preview)", duration: "12:00", language: "English", eligible: true, expires: "Nov 30, 2026" },
+      { id: "r2", title: "Deep Sleep Pranayama (Archive)", duration: "15:00", language: "Hindi", eligible: false, expires: "Expired Oct 31, 2026" }
+    ],
+    transactions: [],
+    notifications: [
+      { id: "n0", title: "Welcome to YogaGuru!", body: "Book your first 5–15 min session or pick a wellness plan to get started.", time: "Just now", unread: true }
+    ],
+    notifPrefs: { booking: true, reminders: true, renewal: true },
+    ivr: {
+      log: [
+        { from: "bot", text: "Namaste! Welcome to YogaGuru's Yoga e-Guru IVR. Press 1 for Session Timings, 2 for Subscription & Refund Policy, 3 for Desk Yoga Tips, 4 for Booking Help, or 0 for Human Support. You can also type a question below." }
+      ]
+    },
+    activePlayer: null
+  };
+}
+
+var state = createNewUserState();
+var playerInterval = null;
+var toastTimer = null;
+
+function t(key) {
+  return (I18N[state.language] && I18N[state.language][key]) || I18N.en[key] || key;
+}
+
+function showToast(msg) {
+  var el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.style.display = "none"; }, 2800);
+}
+
+function render() {
+  try {
+    var headerActions = document.getElementById("headerActions");
+    var bottomNav = document.getElementById("bottomNav");
+    var body = document.getElementById("screenBody");
+
+    document.getElementById("langBadge").textContent = state.language.toUpperCase();
+    document.getElementById("statusPersona").textContent = state.user.persona;
+
+    document.getElementById("navHome").textContent = t("navHome");
+    document.getElementById("navSessions").textContent = t("navSessions");
+    document.getElementById("navEguru").textContent = t("navEguru");
+    document.getElementById("navPlans").textContent = t("navPlans");
+    document.getElementById("navProfile").textContent = t("navProfile");
+
+    var unread = state.notifications.filter(function(n) { return n.unread; }).length;
+    var notifBadge = document.getElementById("notifCount");
+    notifBadge.textContent = unread;
+    notifBadge.style.display = unread > 0 ? "grid" : "none";
+
+    if (!state.loggedIn) {
+      headerActions.style.display = "none";
+      bottomNav.style.display = "none";
+      body.innerHTML = renderAuthFlow();
+      return;
+    }
+
+    headerActions.style.display = "flex";
+    bottomNav.style.display = "flex";
+
+    var navButtons = document.querySelectorAll(".nav-item");
+    for (var i = 0; i < navButtons.length; i++) {
+      var btn = navButtons[i];
+      if (btn.getAttribute("data-tab") === state.currentTab) btn.classList.add("active");
+      else btn.classList.remove("active");
+    }
+
+    if (state.currentTab === "home") body.innerHTML = renderHome();
+    else if (state.currentTab === "sessions") body.innerHTML = renderSessions();
+    else if (state.currentTab === "eguru") body.innerHTML = renderEGuru();
+    else if (state.currentTab === "plans") body.innerHTML = renderPlans();
+    else if (state.currentTab === "profile") body.innerHTML = renderProfile();
+  } catch (err) {
+    document.getElementById("screenBody").innerHTML =
+      '<div class="alert alert-red"><b>Render Error:</b> ' + err.message + '</div>';
+  }
+}
+
+function switchTab(tab) {
+  if (!state.loggedIn) state.loggedIn = true;
+  state.currentTab = tab;
+  render();
+}
+
+/* FR01 / FR02: AUTH & ONBOARDING */
+function renderAuthFlow() {
+  if (state.authStep === "login") {
+    return '' +
+      '<div class="card" style="margin-top:16px;">' +
+        '<div class="card-title">Welcome to YogaGuru 🧘</div>' +
+        '<p class="muted">Short, private, personalized yoga designed for busy schedules.</p>' +
+        '<div style="margin-top:14px;">' +
+          '<label class="small"><b>Preferred Language (FR14)</b></label>' +
+          '<select onchange="state.language=this.value; render()">' +
+            '<option value="en" ' + (state.language === "en" ? "selected" : "") + '>English</option>' +
+            '<option value="hi" ' + (state.language === "hi" ? "selected" : "") + '>हिन्दी (Hindi)</option>' +
+            '<option value="ta" ' + (state.language === "ta" ? "selected" : "") + '>தமிழ் (Tamil)</option>' +
+          '</select>' +
+          '<label class="small"><b>Mobile Number or Email (FR01)</b></label>' +
+          '<input class="input" id="loginContact" value="' + state.user.contact + '" placeholder="+91 98765 43210 or email" />' +
+          '<button class="btn btn-primary" onclick="sendOtp()">Send OTP</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="alert alert-green"><b>Privacy First:</b> You control which health details your yoga instructor can view (BR01).</div>';
+  }
+
+  if (state.authStep === "otp") {
+    return '' +
+      '<div class="card" style="margin-top:16px;">' +
+        '<div class="card-title">Verify OTP</div>' +
+        '<p class="muted">Enter the 4-digit OTP sent to <b>' + state.user.contact + '</b> (Demo OTP: <b>1234</b>)</p>' +
+        '<input class="input" id="otpInput" value="1234" maxlength="4" />' +
+        '<button class="btn btn-primary" onclick="verifyOtp()">Verify & Continue</button>' +
+        '<button class="btn btn-outline" style="margin-top:8px;" onclick="state.authStep=\'login\'; render()">Change Number</button>' +
+      '</div>';
+  }
+
+  if (state.authStep === "onboarding1") {
+    var allGoals = ["Stress Relief", "Flexibility", "Weight Management", "Desk Posture"];
+    var goalsHtml = allGoals.map(function(g) {
+      var active = state.user.goals.indexOf(g) !== -1;
+      return '<button class="chip ' + (active ? "active" : "") + '" onclick="toggleGoal(\'' + g + '\')">' + g + '</button>';
+    }).join("");
+
+    return '' +
+      '<div class="card">' +
+        '<div class="card-title">Step 1 of 2: Profile & Goals</div>' +
+        '<p class="muted">Tell us about yourself so we can build your daily plan.</p>' +
+        '<label class="small" style="display:block; margin-top:10px;"><b>Your Name</b></label>' +
+        '<input class="input" id="onboardName" value="' + state.user.name + '" oninput="state.user.name=this.value" />' +
+        '<label class="small"><b>I am a:</b></label>' +
+        '<select onchange="state.user.persona=this.value">' +
+          '<option ' + (state.user.persona === "Office Professional" ? "selected" : "") + '>Office Professional</option>' +
+          '<option ' + (state.user.persona === "Student" ? "selected" : "") + '>Student</option>' +
+          '<option ' + (state.user.persona === "Wellness-focused User" ? "selected" : "") + '>Wellness-focused User</option>' +
+        '</select>' +
+        '<label class="small"><b>Wellness Goals (FR02):</b></label>' +
+        '<div class="row wrap" style="margin:6px 0 12px;">' + goalsHtml + '</div>' +
+        '<label class="small"><b>Preferred Practice Time:</b></label>' +
+        '<select onchange="state.user.preferredTime=this.value">' +
+          '<option ' + (state.user.preferredTime === "1:00 PM (Office Break)" ? "selected" : "") + '>1:00 PM (Office Break)</option>' +
+          '<option ' + (state.user.preferredTime === "7:00 AM (Morning)" ? "selected" : "") + '>7:00 AM (Morning)</option>' +
+          '<option ' + (state.user.preferredTime === "7:30 PM (Evening Unwind)" ? "selected" : "") + '>7:30 PM (Evening Unwind)</option>' +
+        '</select>' +
+        '<button class="btn btn-primary" onclick="state.authStep=\'onboarding2\'; render()">Next: Private Health Assessment →</button>' +
+      '</div>';
+  }
+
+  var assessmentHtml = state.healthAssessment.map(function(item) {
+    var statusTxt = item.shareWithInstructor
+      ? '<span style="color:var(--primary)">Shared with instructor</span>'
+      : '<span style="color:var(--danger)">Private (Hidden)</span>';
+    return '' +
+      '<div style="padding:10px 0; border-bottom:1px solid var(--border);" class="between">' +
+        '<div style="padding-right:8px;">' +
+          '<div class="small"><b>' + item.label + '</b></div>' +
+          '<div class="muted">Severity: ' + item.severity + ' • ' + statusTxt + '</div>' +
+        '</div>' +
+        '<label class="switch">' +
+          '<input type="checkbox" ' + (item.shareWithInstructor ? "checked" : "") + ' onchange="toggleHealthShare(\'' + item.id + '\')">' +
+          '<span class="slider"></span>' +
+        '</label>' +
+      '</div>';
+  }).join("");
+
+  return '' +
+    '<div class="card">' +
+      '<div class="card-title">Step 2 of 2: Private Health Assessment</div>' +
+      '<p class="muted">Voluntary (FR02). Toggle exactly what instructors can see (BR01 / US03).</p>' +
+      '<div style="margin-top:10px;">' + assessmentHtml + '</div>' +
+      '<button class="btn btn-primary" style="margin-top:14px;" onclick="completeOnboarding()">Finish & View My Plan</button>' +
+      '<button class="btn btn-outline" style="margin-top:8px;" onclick="completeOnboarding()">Skip Assessment</button>' +
+    '</div>';
+}
+
+function sendOtp() {
+  var val = document.getElementById("loginContact").value.trim();
+  if (!val) return showToast("Please enter mobile or email");
+  state.user.contact = val;
+  state.authStep = "otp";
+  render();
+}
+
+function verifyOtp() {
+  var otp = document.getElementById("otpInput").value.trim();
+  if (otp !== "1234") return showToast("Invalid OTP. Use 1234 for demo.");
+  state.authStep = "onboarding1";
+  render();
+}
+
+function toggleGoal(g) {
+  var idx = state.user.goals.indexOf(g);
+  if (idx !== -1) state.user.goals.splice(idx, 1);
+  else state.user.goals.push(g);
+  render();
+}
+
+function toggleHealthShare(id) {
+  for (var i = 0; i < state.healthAssessment.length; i++) {
+    if (state.healthAssessment[i].id === id) {
+      state.healthAssessment[i].shareWithInstructor = !state.healthAssessment[i].shareWithInstructor;
+    }
+  }
+  render();
+}
+
+function completeOnboarding() {
+  if (!state.user.name || !state.user.name.trim()) state.user.name = "Aarav Sharma";
+  state.loggedIn = true;
+  state.currentTab = "home";
+  showToast("Personalized plan ready! Book your first session.");
+  render();
+}
+
+/* FR03 / FR04: HOME DASHBOARD */
+function renderHome() {
+  var completionPct = Math.round((state.user.completedSessions / state.user.prescribedSessions) * 100);
+  var deskSessions = state.sessions.filter(function(s) { return s.duration <= 15; });
+  var upcoming = state.sessions.filter(function(s) { return state.bookedSessionIds.indexOf(s.id) !== -1; });
+
+  var renewalBanner = "";
+  if (state.subscription.renewalReminder3Day && state.subscription.status === "Active") {
+    renewalBanner = '' +
+      '<div class="alert alert-amber">' +
+        '<b>⏰ Renewal Reminder (US06 / BR04):</b> Your <b>' + state.subscription.planName + '</b> renews in 3 days (' + state.subscription.endDate + ') for ₹' + state.subscription.price + '.' +
+        '<div style="margin-top:6px;" class="row"><button class="btn btn-sm btn-primary" onclick="switchTab(\'plans\')">Manage / Cancel</button></div>' +
+      '</div>';
+  }
+
+  var newUserBanner = "";
+  if (state.subscription.status === "None") {
+    newUserBanner = '' +
+      '<div class="alert alert-green">' +
+        '<b>🌱 New Member Setup:</b> Pick a subscription plan or pay per session (₹149) to book your first live class.' +
+        '<div style="margin-top:6px;" class="row"><button class="btn btn-sm btn-primary" onclick="switchTab(\'plans\')">Compare Plans</button></div>' +
+      '</div>';
+  }
+
+  var upcomingHtml = upcoming.length === 0
+    ? '<p class="muted">No upcoming bookings yet. Book any session below to get started!</p>'
+    : upcoming.map(function(s) {
+        return '' +
+          '<div style="padding:8px 0; border-bottom:1px solid var(--border);" class="between">' +
+            '<div><div class="small"><b>' + s.title + '</b></div><div class="muted">' + s.time + ' • ' + s.duration + ' min • ' + s.instructor + '</div></div>' +
+            '<button class="btn btn-sm btn-primary" onclick="startSessionPlayer(\'' + s.id + '\')">Join</button>' +
+          '</div>';
+      }).join("");
+
+  var deskHtml = deskSessions.map(function(s) {
+    var booked = state.bookedSessionIds.indexOf(s.id) !== -1;
+    return '' +
+      '<div style="padding:8px 0; border-bottom:1px solid var(--border);" class="between">' +
+        '<div><div class="small"><b>' + s.title + '</b></div><div class="muted">' + s.duration + ' min • ' + s.language + ' • ' + s.time + '</div></div>' +
+        '<button class="btn btn-sm btn-outline" onclick="bookSession(\'' + s.id + '\')">' + (booked ? "Booked ✓" : "Book") + '</button>' +
+      '</div>';
+  }).join("");
+
+  var streakTitle = state.user.streakDays === 0
+    ? "🌱 Day 0 — Start Your Streak!"
+    : "🔥 " + state.user.streakDays + "-Day Yoga Streak";
+
+  return renewalBanner + newUserBanner +
+    '<div class="card" style="background: linear-gradient(135deg, #1b4332, #2d6a4f); color: white;">' +
+      '<div class="between">' +
+        '<div><div style="font-size:12px; opacity:0.85;">' + t("welcome") + ', ' + state.user.name + '</div><div style="font-size:18px; font-weight:700; margin-top:2px;">' + streakTitle + '</div></div>' +
+        '<span class="pill" style="background:rgba(255,255,255,0.2); color:#fff;">' + state.subscription.planName + '</span>' +
+      '</div>' +
+      '<div style="margin-top:10px; font-size:12px; opacity:0.9;">Program Progress: ' + state.user.completedSessions + '/' + state.user.prescribedSessions + ' sessions (' + completionPct + '%)</div>' +
+      '<div class="progress-bar" style="background:rgba(255,255,255,0.25);"><div class="progress-fill" style="width:' + Math.min(100, completionPct) + '%; background:#a7f3d0;"></div></div>' +
+      '<div class="between" style="font-size:11px; opacity:0.9; margin-top:4px;">' +
+        '<span>Check-ins: ' + state.user.weeklyCheckIns + '/' + state.user.requiredWeeklyCheckIns + '</span>' +
+        '<span>Reminders: ' + (state.user.remindersEnabled ? "ON" : "Paused") + '</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title"><span>' + t("recommended") + '</span><span class="pill">US05</span></div>' +
+      '<p class="muted">Tailored for <b>' + (state.user.goals.join(", ") || "General Wellness") + '</b> • ' + state.user.preferredTime + '</p>' +
+      '<div style="margin-top:10px; padding:10px; background:var(--bg-app); border-radius:10px;" class="between">' +
+        '<div><div class="small"><b>Neck & Shoulder Desk Reset</b></div><div class="muted">10 mins • Protects Lower Back</div></div>' +
+        '<button class="btn btn-sm btn-primary" onclick="bookOrStartRecommended(\'s1\')">' + (state.bookedSessionIds.indexOf("s1") !== -1 ? "Start Now" : "Book") + '</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card"><div class="card-title"><span>Upcoming Booked Sessions</span><button class="btn btn-sm btn-outline" onclick="switchTab(\'sessions\')">Browse All</button></div>' + upcomingHtml + '</div>' +
+    '<div class="card"><div class="card-title"><span>' + t("deskYoga") + '</span><span class="pill pill-amber">Office Break</span></div>' + deskHtml + '</div>';
+}
+
+function bookOrStartRecommended(id) {
+  if (state.bookedSessionIds.indexOf(id) !== -1) startSessionPlayer(id);
+  else bookSession(id);
+}
+
+/* FR03 / FR07 / FR09 / FR10: SESSIONS */
+function renderSessions() {
+  var f = state.sessionFilter;
+  var filtered = state.sessions.filter(function(s) {
+    if (f.category !== "All" && s.category !== f.category) return false;
+    if (f.duration === "Desk (5-15m)" && s.duration > 15) return false;
+    if (f.duration === "30m+" && s.duration < 30) return false;
+    if (f.language !== "All" && s.language !== f.language) return false;
+    return true;
+  });
+
+  var categories = ["All", "Desk Yoga", "Stress Relief", "Weight Management", "Live 1:1"];
+  var chipsHtml = categories.map(function(c) {
+    return '<button class="chip ' + (f.category === c ? "active" : "") + '" onclick="state.sessionFilter.category=\'' + c + '\'; render()">' + c + '</button>';
+  }).join("");
+
+  var listHtml = filtered.map(function(s) {
+    var isBooked = state.bookedSessionIds.indexOf(s.id) !== -1;
+    var isFull = s.spotsLeft === 0;
+    var actionBtn = isBooked
+      ? '<button class="btn btn-sm btn-primary" onclick="startSessionPlayer(\'' + s.id + '\')">Join Session</button>'
+      : '<button class="btn btn-sm ' + (isFull ? "btn-outline" : "btn-primary") + '" onclick="bookSession(\'' + s.id + '\')">' + (s.type === "1:1" ? "Book 1:1" : "Book Slot") + '</button>';
+
+    return '' +
+      '<div class="card">' +
+        '<div class="between"><span class="pill ' + (s.type === "1:1" ? "pill-amber" : "") + '">' + s.category + ' • ' + s.duration + ' min</span><span class="muted">' + s.language + '</span></div>' +
+        '<div class="card-title" style="margin-top:6px;">' + s.title + '</div>' +
+        '<div class="muted">Instructor: <b>' + s.instructor + '</b> • ' + s.time + '</div>' +
+        '<div class="between" style="margin-top:10px;">' +
+          '<span class="small ' + (isFull ? "pill pill-red" : "muted") + '">' + (isFull ? "Slot Full" : s.spotsLeft + " spot(s) left") + '</span>' +
+          '<div class="row">' + actionBtn + '</div>' +
+        '</div>' +
+      '</div>';
+  }).join("");
+
+  var recHtml = state.recordings.map(function(r) {
+    var expiryHtml = r.eligible ? "Available until " + r.expires : '<span style="color:var(--danger)">' + r.expires + '</span>';
+    var btnHtml = r.eligible
+      ? '<button class="btn btn-sm btn-outline" onclick="playRecording(\'' + r.id + '\')">▶ Play</button>'
+      : '<button class="btn btn-sm btn-danger" onclick="showToast(\'Access expired for this recording per subscription plan.\')">Locked</button>';
+    return '' +
+      '<div style="padding:10px 0; border-bottom:1px solid var(--border);" class="between">' +
+        '<div><div class="small"><b>' + r.title + '</b></div><div class="muted">' + r.duration + ' • ' + r.language + ' • ' + expiryHtml + '</div></div>' +
+        btnHtml +
+      '</div>';
+  }).join("");
+
+  return '' +
+    '<div class="chip-row">' + chipsHtml + '</div>' +
+    '<div class="row" style="margin-bottom:12px;">' +
+      '<select style="margin:0;" onchange="state.sessionFilter.duration=this.value; render()">' +
+        '<option value="All" ' + (f.duration === "All" ? "selected" : "") + '>All Durations</option>' +
+        '<option value="Desk (5-15m)" ' + (f.duration === "Desk (5-15m)" ? "selected" : "") + '>5–15 min Desk Yoga</option>' +
+        '<option value="30m+" ' + (f.duration === "30m+" ? "selected" : "") + '>30+ min Sessions</option>' +
+      '</select>' +
+      '<select style="margin:0;" onchange="state.sessionFilter.language=this.value; render()">' +
+        '<option value="All" ' + (f.language === "All" ? "selected" : "") + '>All Languages</option>' +
+        '<option value="English" ' + (f.language === "English" ? "selected" : "") + '>English</option>' +
+        '<option value="Hindi" ' + (f.language === "Hindi" ? "selected" : "") + '>Hindi</option>' +
+        '<option value="Tamil" ' + (f.language === "Tamil" ? "selected" : "") + '>Tamil</option>' +
+      '</select>' +
+    '</div>' +
+    listHtml +
+    '<div class="card"><div class="card-title"><span>Session Recordings (FR10 / US04)</span><span class="pill pill-gray">Replay</span></div>' + recHtml + '</div>';
+}
+
+function findSession(id) {
+  for (var i = 0; i < state.sessions.length; i++) {
+    if (state.sessions[i].id === id) return state.sessions[i];
+  }
+  return null;
+}
+
+function bookSession(id) {
+  var s = findSession(id);
+  if (!s) return;
+
+  if (state.bookedSessionIds.indexOf(id) !== -1) {
+    showToast("You already booked this session (BR05 duplicate check).");
+    return;
+  }
+
+  if (s.spotsLeft === 0) {
+    openModal('' +
+      '<div class="card-title">Slot Unavailable (US01)</div>' +
+      '<p class="muted">Sorry, <b>' + s.title + '</b> at ' + s.time + ' is currently full. Here are available alternatives:</p>' +
+      '<div class="card" style="margin-top:10px; background:var(--bg-app);">' +
+        '<div class="small"><b>15-Min Midday Stress Release</b></div>' +
+        '<div class="muted">Today, 4:30 PM • 5 spots left</div>' +
+        '<button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="closeModal(); bookSession(\'s2\')">Book Alternative</button>' +
+      '</div>' +
+      '<button class="btn btn-outline" onclick="closeModal()">Close</button>');
+    return;
+  }
+
+  if ((s.type === "1:1" && state.subscription.planId !== "premium") || state.subscription.status === "None") {
+    openPaymentModal("Single Session: " + s.title, s.price, function() { confirmBookingSuccess(s); }, true);
+    return;
+  }
+
+  confirmBookingSuccess(s);
+}
+
+function confirmBookingSuccess(s) {
+  if (state.bookedSessionIds.indexOf(s.id) === -1) {
+    state.bookedSessionIds.push(s.id);
+    s.spotsLeft = Math.max(0, s.spotsLeft - 1);
+    state.notifications.unshift({
+      id: "n" + Date.now(),
+      title: "Booking Confirmed",
+      body: s.title + " with " + s.instructor + " (" + s.time + ").",
+      time: "Just now",
+      unread: true
+    });
+  }
+  showToast("Booked: " + s.title);
+  render();
+}
+
+function startSessionPlayer(id) {
+  var s = findSession(id);
+  if (!s) return;
+  state.activePlayer = { id: s.id, title: s.title, steps: s.steps, seconds: s.duration * 60, running: true, isRecording: false };
+  openSessionPlayerModal();
+}
+
+function playRecording(recId) {
+  var r = null;
+  for (var i = 0; i < state.recordings.length; i++) {
+    if (state.recordings[i].id === recId) r = state.recordings[i];
+  }
+  if (!r) return;
+  state.activePlayer = {
+    id: r.id,
+    title: "Recording: " + r.title,
+    steps: ["Warm-up Breathing", "Main Sequence", "Cooldown & Savasana"],
+    seconds: 420,
+    running: true,
+    isRecording: true
+  };
+  openSessionPlayerModal();
+}
+
+function drawPlayerState() {
+  var p = state.activePlayer;
+  if (!p) return;
+  var mins = String(Math.floor(p.seconds / 60));
+  var secs = String(p.seconds % 60);
+  if (mins.length < 2) mins = "0" + mins;
+  if (secs.length < 2) secs = "0" + secs;
+  var stepsHtml = p.steps.map(function(st) { return "<li>" + st + "</li>"; }).join("");
+
+  openModal('' +
+    '<div class="between">' +
+      '<span class="pill">' + (p.isRecording ? "Recording Playback (FR10)" : "Live Session (FR07)") + '</span>' +
+      '<button class="btn btn-sm btn-outline" onclick="clearInterval(playerInterval); closeModal()">Minimize</button>' +
+    '</div>' +
+    '<h3 style="margin:10px 0 4px;">' + p.title + '</h3>' +
+    '<div style="background:#111827; color:#fff; border-radius:14px; padding:24px; text-align:center; margin:10px 0;">' +
+      '<div style="font-size:36px; font-weight:700; letter-spacing:2px;">' + mins + ':' + secs + '</div>' +
+      '<div style="font-size:12px; color:#a7f3d0; margin-top:6px;">🧘 Guided Posture View Active</div>' +
+    '</div>' +
+    '<div class="card" style="background:var(--bg-app);"><div class="small"><b>Session Flow:</b></div><ul style="padding-left:18px; margin-top:4px; font-size:12px; line-height:1.6;">' + stepsHtml + '</ul></div>' +
+    '<div class="row" style="margin-top:10px;">' +
+      '<button class="btn btn-outline" onclick="state.activePlayer.running=!state.activePlayer.running; drawPlayerState()">' + (p.running ? "⏸ Pause" : "▶ Resume") + '</button>' +
+      '<button class="btn btn-primary" onclick="completeCurrentSession()">✓ Mark Completed</button>' +
+    '</div>');
+}
+
+function openSessionPlayerModal() {
+  clearInterval(playerInterval);
+  drawPlayerState();
+  playerInterval = setInterval(function() {
+    if (state.activePlayer && state.activePlayer.running && state.activePlayer.seconds > 0) {
+      state.activePlayer.seconds--;
+      if (document.getElementById("modalOverlay").classList.contains("open")) drawPlayerState();
+    }
+  }, 1000);
+}
+
+function completeCurrentSession() {
+  clearInterval(playerInterval);
+  if (state.activePlayer && !state.activePlayer.isRecording) {
+    state.user.completedSessions = Math.min(state.user.prescribedSessions, state.user.completedSessions + 1);
+    state.user.streakDays++;
+  }
+  closeModal();
+  showToast("Session completed! Progress updated to " + state.user.completedSessions + "/" + state.user.prescribedSessions);
+  render();
+}
+
+/* FR08 / US07: YOGA e-GURU IVR */
+function renderEGuru() {
+  var logsHtml = state.ivr.log.map(function(m) {
+    return '<div class="ivr-msg ' + (m.from === "bot" ? "ivr-bot" : "ivr-user") + '">' + m.text + '</div>';
+  }).join("");
+
+  return '' +
+    '<div class="card">' +
+      '<div class="card-title"><span>Yoga e-Guru (IVR Support)</span><span class="pill">FR08 / US07</span></div>' +
+      '<p class="muted">Use the keypad (1–4, 0) or ask a question below. Guardrail: Does not provide unverified medical diagnoses.</p>' +
+    '</div>' +
+    '<div class="ivr-screen">' +
+      '<div class="between"><span style="font-size:12px; color:#34d399;">● IVR Line Ready • Toll-Free</span><span style="font-size:11px; color:#9ca3af;">Voice / DTMF</span></div>' +
+      '<div class="ivr-log" id="ivrLog">' + logsHtml + '</div>' +
+      '<div class="row">' +
+        '<input class="input" id="ivrQueryInput" style="margin:0; background:#1f2937; color:#fff; border-color:#374151;" placeholder="Ask e.g. refund, desk yoga, chest pain..." />' +
+        '<button class="btn btn-sm btn-primary" onclick="submitIvrText()">Ask</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="keypad">' +
+      '<button class="key-btn" onclick="pressIvrKey(\'1\')">1<span>Session Timings</span></button>' +
+      '<button class="key-btn" onclick="pressIvrKey(\'2\')">2<span>Plans & Refunds</span></button>' +
+      '<button class="key-btn" onclick="pressIvrKey(\'3\')">3<span>Desk Yoga Tips</span></button>' +
+      '<button class="key-btn" onclick="pressIvrKey(\'4\')">4<span>Booking Help</span></button>' +
+      '<button class="key-btn" onclick="pressIvrKey(\'5\')">5<span>Repeat Menu</span></button>' +
+      '<button class="key-btn" onclick="pressIvrKey(\'0\')" style="background:#fef3c7;">0<span>Human Support</span></button>' +
+    '</div>';
+}
+
+function addIvrMessage(from, text) {
+  state.ivr.log.push({ from: from, text: text });
+  render();
+  setTimeout(function() {
+    var log = document.getElementById("ivrLog");
+    if (log) log.scrollTop = log.scrollHeight;
+  }, 20);
+}
+
+function pressIvrKey(key) {
+  var map = {
+    "1": ["Pressed 1 (Session Timings)", "Short 5–15 min desk yoga sessions run hourly from 7 AM to 9 PM IST in English, Hindi, and Tamil."],
+    "2": ["Pressed 2 (Plans & Refunds)", "Cancel anytime with 1 tap to stop future renewals. Money-back refunds require 80% session completion, weekly check-ins, and claim within 14 days of program end (BR03)."],
+    "3": ["Pressed 3 (Desk Yoga Tips)", "Try 2 minutes of seated shoulder rolls and deep box breathing every 90 minutes. Open the Sessions tab to join a guided routine."],
+    "4": ["Pressed 4 (Booking Help)", "Select any available slot in Sessions. If a slot is full, the app suggests alternatives and prevents double-booking."],
+    "5": ["Pressed 5 (Repeat Menu)", "Menu: 1 Timings, 2 Subscriptions & Refunds, 3 Desk Yoga Tips, 4 Booking Help, 0 Escalate to Human Support."],
+    "0": ["Pressed 0 (Human Support)", "Escalating you to a live YogaGuru care coordinator. Callback scheduled within 10 minutes at " + state.user.contact + "."]
+  };
+  addIvrMessage("user", map[key][0]);
+  addIvrMessage("bot", map[key][1]);
+}
+
+function submitIvrText() {
+  var input = document.getElementById("ivrQueryInput");
+  var q = input.value.trim();
+  if (!q) return;
+  var lower = q.toLowerCase();
+  addIvrMessage("user", q);
+
+  if (/pain|chest|diagnos|medicine|tablet|disease|bp|diabetes|heart|doctor/.test(lower)) {
+    addIvrMessage("bot", "⚠️ Safety Notice: Yoga e-Guru cannot diagnose medical conditions or provide medical advice. Please consult a qualified doctor. Press 0 to speak with human support.");
+    return;
+  }
+  if (/refund|cancel|money|guarantee/.test(lower)) {
+    addIvrMessage("bot", "You can cancel future renewals anytime with 1 tap. For the money-back guarantee, complete ≥80% of prescribed sessions + weekly check-ins and apply within 14 days after program end.");
+    return;
+  }
+  if (/time|slot|desk|session|1:1/.test(lower)) {
+    addIvrMessage("bot", "5–15 min desk yoga and Live 1:1 slots are listed in the Sessions tab. Premium plans include 1:1 sessions, or you can book single sessions via UPI.");
+    return;
+  }
+  addIvrMessage("bot", "I didn't quite catch that. Could you clarify if your question is about sessions, bookings, or refunds? Or press 0 to connect with human support.");
+}
+
+/* FR05 / FR06 / FR11 / BR02 / BR03: PLANS & BILLING */
+function renderPlans() {
+  var sub = state.subscription;
+  var pct = Math.round((state.user.completedSessions / state.user.prescribedSessions) * 100);
+  var meetsCompletion = pct >= 80;
+  var meetsCheckins = state.user.weeklyCheckIns >= state.user.requiredWeeklyCheckIns;
+  var hasPaidSub = sub.planId !== "none";
+  var eligibleRefund = hasPaidSub && meetsCompletion && meetsCheckins && !sub.refundClaimedEver;
+
+  var activeSubBody = "";
+  if (sub.status === "None") {
+    activeSubBody = '<p class="muted" style="margin-top:6px;">You do not have an active subscription yet. Choose a plan below or book single sessions starting at ₹149.</p>';
+  } else {
+    var renewText = sub.autoRenew
+      ? "Auto-renews on <b>" + sub.endDate + "</b> (3-day advance reminder enabled)"
+      : "Auto-renewal stopped. Access continues until <b>" + sub.endDate + "</b> (BR02).";
+    var cancelSection = sub.autoRenew
+      ? '<button class="btn btn-danger" style="margin-top:10px;" onclick="oneTapCancel()">Cancel Subscription (1-Tap Flow)</button>'
+      : '<div class="alert alert-amber" style="margin-top:10px; margin-bottom:0;">Cancellation confirmed. No future charges will occur. Refund eligibility is evaluated separately below.</div>';
+    activeSubBody =
+      '<div style="margin-top:8px;"><div class="small"><b>' + sub.planName + '</b> — ₹' + sub.price + '/month</div><div class="muted">' + renewText + '</div></div>' +
+      cancelSection;
+  }
+
+  var refundBtnText = sub.refundClaimedEver
+    ? "Refund Claim Submitted"
+    : (eligibleRefund ? "Request Money-Back Refund" : "Complete Conditions to Unlock");
+
+  var plansHtml = PLANS.map(function(p) {
+    var isCurrent = sub.planId === p.id && sub.status === "Active";
+    return '' +
+      '<div style="padding:10px; border:1px solid var(--border); border-radius:10px; margin-bottom:8px;" class="between">' +
+        '<div><div class="small"><b>' + p.name + '</b> — ₹' + p.price + '/mo</div><div class="muted">' + p.desc + '</div></div>' +
+        '<button class="btn btn-sm ' + (isCurrent ? "btn-outline" : "btn-primary") + '" onclick="upgradePlan(\'' + p.id + '\')">' + (isCurrent ? "Current" : "Subscribe") + '</button>' +
+      '</div>';
+  }).join("");
+
+  var txHtml = state.transactions.length === 0
+    ? '<p class="muted">No transactions yet.</p>'
+    : state.transactions.map(function(tx) {
+        return '' +
+          '<div style="padding:8px 0; border-bottom:1px solid var(--border);" class="between">' +
+            '<div><div class="small"><b>' + tx.item + '</b> (₹' + tx.amount + ')</div><div class="muted">' + tx.date + ' • ' + tx.method + ' • Ref: ' + tx.id + '</div></div>' +
+            '<button class="btn btn-sm btn-outline" onclick="viewInvoice(\'' + tx.id + '\')">Invoice</button>' +
+          '</div>';
+      }).join("");
+
+  return '' +
+    '<div class="card">' +
+      '<div class="between"><span class="card-title" style="margin:0;">Subscription Status</span><span class="pill ' + (sub.status === "Active" ? "" : "pill-amber") + '">' + sub.status + '</span></div>' +
+      activeSubBody +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title"><span>Money-Back Guarantee (BR03)</span><span class="pill ' + (eligibleRefund ? "" : "pill-gray") + '">' + sub.refundStatus + '</span></div>' +
+      '<p class="muted">Eligibility conditions (active plan, one claim per user, within 14 days of program end):</p>' +
+      '<div style="margin-top:8px; font-size:12px; line-height:1.7;">' +
+        '<div>' + (hasPaidSub ? "✅" : "⏳") + ' Active/Paid Subscription Plan</div>' +
+        '<div>' + (meetsCompletion ? "✅" : "⏳") + ' ≥80% Prescribed Sessions: <b>' + pct + '% (' + state.user.completedSessions + '/' + state.user.prescribedSessions + ')</b></div>' +
+        '<div>' + (meetsCheckins ? "✅" : "⏳") + ' Weekly Check-ins Completed: <b>' + state.user.weeklyCheckIns + '/' + state.user.requiredWeeklyCheckIns + '</b></div>' +
+        '<div>' + (!sub.refundClaimedEver ? "✅" : "❌") + ' One Claim Per User: <b>' + (sub.refundClaimedEver ? "Already Claimed" : "Available") + '</b></div>' +
+      '</div>' +
+      '<div class="row" style="margin-top:10px;">' +
+        '<button class="btn btn-outline btn-sm" onclick="logWeeklyCheckIn()">+ Log Weekly Check-in</button>' +
+        '<button class="btn btn-primary" ' + (eligibleRefund ? "" : "disabled") + ' onclick="submitRefundRequest()">' + refundBtnText + '</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card"><div class="card-title">Compare Plans & Single-Session (FR05)</div><p class="muted" style="margin-bottom:8px;">Single group sessions start at ₹149, or save with a monthly plan via UPI:</p>' + plansHtml + '</div>' +
+    '<div class="card"><div class="card-title">Transaction History & Invoices (FR06)</div>' + txHtml + '</div>';
+}
+
+function logWeeklyCheckIn() {
+  if (state.user.weeklyCheckIns < state.user.requiredWeeklyCheckIns) {
+    state.user.weeklyCheckIns++;
+    showToast("Weekly check-in logged (" + state.user.weeklyCheckIns + "/" + state.user.requiredWeeklyCheckIns + ")");
+    render();
+  } else {
+    showToast("All 4 weekly check-ins already completed!");
+  }
+}
+
+function oneTapCancel() {
+  state.subscription.autoRenew = false;
+  state.subscription.status = "Cancelled";
+  state.notifications.unshift({
+    id: "n" + Date.now(),
+    title: "Subscription Cancelled",
+    body: "Auto-renewal stopped. Access remains active until " + state.subscription.endDate + ".",
+    time: "Just now",
+    unread: true
+  });
+  showToast("Subscription cancelled. Access continues till " + state.subscription.endDate);
+  render();
+}
+
+function submitRefundRequest() {
+  if (state.subscription.refundClaimedEver) return showToast("Duplicate refund claim prevented (FR11).");
+  state.subscription.refundClaimedEver = true;
+  state.subscription.refundStatus = "Submitted (Under Review)";
+  state.notifications.unshift({
+    id: "n" + Date.now(),
+    title: "Refund Request Submitted",
+    body: "Eligibility verified (≥80% completed). Refund status: Under Review.",
+    time: "Just now",
+    unread: true
+  });
+  showToast("Refund request submitted!");
+  render();
+}
+
+function upgradePlan(planId) {
+  var plan = null;
+  for (var i = 0; i < PLANS.length; i++) {
+    if (PLANS[i].id === planId) plan = PLANS[i];
+  }
+  if (!plan) return;
+  if (state.subscription.planId === plan.id && state.subscription.status === "Active") return;
+
+  openPaymentModal(plan.name, plan.price, function() {
+    state.subscription.planId = plan.id;
+    state.subscription.planName = plan.name;
+    state.subscription.price = plan.price;
+    state.subscription.status = "Active";
+    state.subscription.autoRenew = true;
+    state.subscription.endDate = "2026-12-19";
+    showToast("Subscribed to " + plan.name + "!");
+    render();
+  }, false);
+}
+
+var _pendingPayCallback = null;
+var _pendingPayMeta = null;
+var _payProcessing = false;
+
+function processDemoPayment(shouldFail) {
+  if (_payProcessing) return;
+  _payProcessing = true;
+  if (shouldFail) {
+    _payProcessing = false;
+    document.getElementById("payError").style.display = "block";
+    return;
+  }
+  var ref = "TXN-" + Math.floor(10000 + Math.random() * 89999);
+  state.transactions.unshift({
+    id: ref,
+    date: "2026-11-19",
+    item: _pendingPayMeta.title,
+    method: document.getElementById("payMethod").value,
+    amount: _pendingPayMeta.amount,
+    status: "Success"
+  });
+  _payProcessing = false;
+  closeModal();
+  if (_pendingPayCallback) _pendingPayCallback();
+}
+
+function openPaymentModal(title, amount, onSuccess, allowPlanSwitch) {
+  _pendingPayMeta = { title: title, amount: amount };
+  _pendingPayCallback = onSuccess;
+  _payProcessing = false;
+
+  var planChoiceHtml = allowPlanSwitch
+    ? '<button class="btn btn-outline" style="margin-top:8px;" onclick="closeModal(); switchTab(\'plans\')">Compare Monthly Plans Instead (FR05)</button>'
+    : '';
+
+  openModal('' +
+    '<div class="card-title">Checkout & Payment (FR06)</div>' +
+    '<p class="muted">Item: <b>' + title + '</b></p>' +
+    '<div style="font-size:22px; font-weight:700; margin:8px 0;">₹' + amount + '</div>' +
+    '<p class="muted" style="margin-bottom:10px;">Recurring terms (if subscription): Auto-renewal reminder sent 3 days prior. Cancel anytime in 1 tap.</p>' +
+    '<div id="payError" class="alert alert-red" style="display:none;"><b>Payment Failed:</b> UPI gateway timeout. No amount was deducted. Please retry below.</div>' +
+    '<label class="small"><b>Payment Method</b></label>' +
+    '<select id="payMethod"><option>UPI (GPay / PhonePe / BHIM)</option><option>Credit / Debit Card</option><option>Netbanking</option></select>' +
+    '<button class="btn btn-primary" onclick="processDemoPayment(false)">Pay ₹' + amount + ' via UPI</button>' +
+    '<button class="btn btn-outline" style="margin-top:8px;" onclick="processDemoPayment(true)">Simulate Failed Payment (Test Retry)</button>' +
+    planChoiceHtml);
+}
+
+function viewInvoice(txId) {
+  var tx = null;
+  for (var i = 0; i < state.transactions.length; i++) {
+    if (state.transactions[i].id === txId) tx = state.transactions[i];
+  }
+  if (!tx) return;
+  openModal('' +
+    '<div class="card-title">Tax Invoice</div>' +
+    '<div class="small" style="line-height:1.8;">' +
+      '<div><b>Transaction Ref:</b> ' + tx.id + '</div>' +
+      '<div><b>Date:</b> ' + tx.date + '</div>' +
+      '<div><b>Customer:</b> ' + state.user.name + ' (' + state.user.contact + ')</div>' +
+      '<div><b>Plan / Item:</b> ' + tx.item + '</div>' +
+      '<div><b>Payment Mode:</b> ' + tx.method + '</div>' +
+      '<div><b>Amount Paid:</b> ₹' + tx.amount + ' (Incl. GST)</div>' +
+      '<div><b>Status:</b> <span class="pill">' + tx.status + '</span></div>' +
+    '</div>' +
+    '<button class="btn btn-primary" style="margin-top:14px;" onclick="closeModal()">Close</button>');
+}
+
+/* FR02 / FR12 / FR13 / BR01: PROFILE & PRIVACY */
+function renderProfile() {
+  var goalsHtml = state.user.goals.map(function(g) { return '<span class="pill">' + g + '</span>'; }).join("");
+  var healthHtml = state.healthAssessment.map(function(item) {
+    return '' +
+      '<div style="padding:10px 0; border-bottom:1px solid var(--border);" class="between">' +
+        '<div><div class="small"><b>' + item.label + '</b></div><div class="muted">' + (item.shareWithInstructor ? "Visible to Instructor" : "Hidden from Instructor") + '</div></div>' +
+        '<label class="switch"><input type="checkbox" ' + (item.shareWithInstructor ? "checked" : "") + ' onchange="toggleHealthShare(\'' + item.id + '\')"><span class="slider"></span></label>' +
+      '</div>';
+  }).join("");
+
+  return '' +
+    '<div class="card">' +
+      '<div class="card-title">' + state.user.name + '</div>' +
+      '<div class="muted">' + state.user.contact + ' • ' + state.user.persona + '</div>' +
+      '<div class="row wrap" style="margin-top:8px;">' + goalsHtml + '</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title"><span>Health Info Privacy Controls (BR01 / US03)</span><span class="pill">Encrypted</span></div>' +
+      '<p class="muted">Only toggle ON items you explicitly consent to share with your instructor.</p>' +
+      '<div style="margin-top:8px;">' + healthHtml + '</div>' +
+      '<button class="btn btn-outline" style="margin-top:10px;" onclick="openInstructorPrivacyPreview()">👁️ Preview What Instructor Sees</button>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title">Preferences & Reminders (FR04 / FR12)</div>' +
+      '<div class="between" style="padding:6px 0;"><span class="small">Daily Practice Reminders (' + state.user.preferredTime + ')</span><label class="switch"><input type="checkbox" ' + (state.user.remindersEnabled ? "checked" : "") + ' onchange="state.user.remindersEnabled=!state.user.remindersEnabled; render()"><span class="slider"></span></label></div>' +
+      '<div class="between" style="padding:6px 0;"><span class="small">3-Day Renewal Reminders</span><label class="switch"><input type="checkbox" ' + (state.notifPrefs.renewal ? "checked" : "") + ' onchange="state.notifPrefs.renewal=!state.notifPrefs.renewal; render()"><span class="slider"></span></label></div>' +
+    '</div>' +
+    '<button class="btn btn-danger" onclick="resetPrototype()">Log Out</button>';
+}
+
+/* MODALS & STAKEHOLDER DEMO CONTROLS */
+function openModal(html) {
+  document.getElementById("modalSheet").innerHTML = html;
+  document.getElementById("modalOverlay").classList.add("open");
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+}
+
+function openLanguageModal() {
+  openModal('' +
+    '<div class="card-title">Select App Language (FR14)</div>' +
+    '<button class="btn btn-outline" style="margin-bottom:8px;" onclick="state.language=\'en\'; closeModal(); render()">English</button>' +
+    '<button class="btn btn-outline" style="margin-bottom:8px;" onclick="state.language=\'hi\'; closeModal(); render()">हिन्दी (Hindi)</button>' +
+    '<button class="btn btn-outline" onclick="state.language=\'ta\'; closeModal(); render()">தமிழ் (Tamil)</button>');
+}
+
+function openNotificationsModal() {
+  for (var i = 0; i < state.notifications.length; i++) state.notifications[i].unread = false;
+  var listHtml = state.notifications.map(function(n) {
+    return '<div style="padding:10px 0; border-bottom:1px solid var(--border);"><div class="between"><b class="small">' + n.title + '</b><span class="muted">' + n.time + '</span></div><div class="muted">' + n.body + '</div></div>';
+  }).join("");
+  openModal('' +
+    '<div class="between" style="margin-bottom:10px;"><span class="card-title" style="margin:0;">Notifications (FR12)</span><button class="btn btn-sm btn-outline" onclick="closeModal(); render()">Close</button></div>' +
+    listHtml);
+  render();
+}
+
+function openInstructorPrivacyPreview() {
+  if (!state.loggedIn) state.loggedIn = true;
+  var shared = state.healthAssessment.filter(function(h) { return h.shareWithInstructor; });
+  var hiddenCount = state.healthAssessment.length - shared.length;
+  var sharedHtml = shared.length === 0
+    ? '<div class="muted" style="margin-top:4px;">No health details shared by user.</div>'
+    : '<ul style="padding-left:18px; margin-top:4px; font-size:12px;">' + shared.map(function(s) { return "<li>" + s.label + " (" + s.severity + ")</li>"; }).join("") + '</ul>';
+
+  openModal('' +
+    '<div class="card-title">Instructor Dashboard View (BR01 Audit)</div>' +
+    '<p class="muted">What instructor <b>Meera Nair</b> sees for student <b>' + state.user.name + '</b>:</p>' +
+    '<div class="card" style="margin-top:10px; background:var(--bg-app);">' +
+      '<div class="small"><b>Goals:</b> ' + state.user.goals.join(", ") + '</div>' +
+      '<div class="small" style="margin-top:6px;"><b>Consented Health Notes:</b></div>' +
+      sharedHtml +
+      '<div class="alert alert-green" style="margin-top:10px; margin-bottom:0;">🔒 <b>' + hiddenCount + ' private health item(s)</b> are strictly hidden from the instructor.</div>' +
+    '</div>' +
+    '<button class="btn btn-primary" onclick="closeModal()">Got It</button>');
+}
+
+function jumpAsReturningUser() {
+  state = createNewUserState();
+  state.loggedIn = true;
+  state.currentTab = "home";
+  state.user.streakDays = 6;
+  state.user.weeklyCheckIns = 3;
+  state.user.completedSessions = 6;
+  state.bookedSessionIds = ["s1"];
+  state.subscription = {
+    planId: "pro",
+    planName: "Pro Wellness Monthly",
+    price: 999,
+    status: "Active",
+    autoRenew: true,
+    endDate: "2026-11-30",
+    renewalReminder3Day: false,
+    refundStatus: "Not Requested",
+    refundClaimedEver: false
+  };
+  state.transactions = [
+    { id: "TXN-88412", date: "2026-11-01", item: "Pro Wellness Monthly", method: "UPI (aarav@okicici)", amount: 999, status: "Success" }
+  ];
+  state.notifications = [
+    { id: "n1", title: "Booking Confirmed", body: "Neck & Shoulder Desk Reset today at 1:15 PM.", time: "1h ago", unread: true },
+    { id: "n2", title: "Daily Streak: 6 Days!", body: "Complete 1 short session today to maintain your streak.", time: "3h ago", unread: true }
+  ];
+  render();
+  showToast("Loaded Returning Pro User (6/10 sessions)");
+}
+
+function simulateRenewalAlert() {
+  if (state.subscription.status !== "Active") jumpAsReturningUser();
+  state.loggedIn = true;
+  state.currentTab = "home";
+  state.subscription.autoRenew = true;
+  state.subscription.status = "Active";
+  state.subscription.renewalReminder3Day = true;
+  state.notifications.unshift({
+    id: "n" + Date.now(),
+    title: "Renewal in 3 Days (BR04)",
+    body: state.subscription.planName + " renews on " + state.subscription.endDate + " for ₹" + state.subscription.price + ".",
+    time: "Now",
+    unread: true
+  });
+  render();
+  showToast("3-Day Renewal Reminder activated on Home & Notifications");
+}
+
+function simulateRefundEligible() {
+  if (state.subscription.planId === "none") jumpAsReturningUser();
+  state.loggedIn = true;
+  state.user.completedSessions = 8;
+  state.user.weeklyCheckIns = 4;
+  state.subscription.refundClaimedEver = false;
+  state.subscription.refundStatus = "Eligible";
+  state.currentTab = "plans";
+  render();
+  showToast("Simulated 80% completion + weekly check-ins!");
+}
+
+function resetPrototype() {
+  clearInterval(playerInterval);
+  state = createNewUserState();
+  closeModal();
+  render();
+}
+
+document.addEventListener("DOMContentLoaded", render);
+render();
+</script>
+</body>
+</html>
